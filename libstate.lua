@@ -1,12 +1,26 @@
+
+local function Serialize(data)
+    if type(data) ~= "table" then
+        return data
+    end
+
+    if type(data.serialize) == "function" then
+        return data:serialize()
+    end
+
+    local new_tbl = {}
+    for k, v in pairs(data) do
+        new_tbl[Serialize(k)] = Serialize(v)
+    end
+    return new_tbl
+end
+
 function SaveState()
     local r = fs.open("resume", "w")
     r.write(shell.getRunningProgram())
     r.close()
-    if _G.STATE == nil then
-        _G.STATE = {}
-    end
     local f = fs.open("save", "w")
-    f.write(textutils.serialize(_G.STATE))
+    f.write(textutils.serialize(Serialize(_G.STATE or {})))
     f.flush()
     f.close()
 end
