@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "files": [
+    "autostart.lua",
+    "libdata.lua",
+    "libinventory.lua",
+    "libmove.lua",
+    "libstate.lua",
+    "miner.lua"
+  ]
+}
