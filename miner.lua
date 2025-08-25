@@ -13,6 +13,10 @@ Keep:add("bucket")
 
 while GetPosition():manhattan() < 100 do
     Move(1, 0, 0)
+    CheckForWorth(UP)
+    CheckForWorth(LEFT)
+    CheckForWorth(RIGHT)
+    CheckForWorth(DOWN)
     Dig(UP)
     CheckInv()
 end

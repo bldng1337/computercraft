@@ -1,11 +1,12 @@
 {
-  "version": 10,
+  "version": 11,
   "files": [
     "startup",
     "libdata.lua",
     "libinventory.lua",
     "libmove.lua",
     "libstate.lua",
-    "miner.lua"
+    "miner.lua",
+    "reset.lua"
   ]
 }

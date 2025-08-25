@@ -1,4 +1,3 @@
-
 function SaveState()
     local r = fs.open("resume", "w")
     r.write(shell.getRunningProgram())
@@ -38,6 +37,7 @@ function UseState(key, initial)
         return _G.STATE[key]
     end, function(v)
         _G.STATE[key] = v
+        SaveState()
     end
 end
 

@@ -229,6 +229,7 @@ function CheckReturn()
     if not HasEnoughFuel() then
         print("Not enough fuel Returning")
         ReturnHome()
+        ResetState()
         error("Ran out of fuel")
     end
 end
@@ -304,7 +305,7 @@ function CheckForWorth(dir)
         LootChest(dir)
         return
     end
-    if block == "lava" and block.state.level == 0 then
+    if block["name"] == "lava" and block.state.level == 0 then
         if SelectItem("bucket") then
             Place(dir)
             turtle.refuel(1)
