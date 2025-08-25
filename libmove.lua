@@ -6,8 +6,9 @@ function HandleResume()
     if GetReturning() then
         ReturnHome()
     end
-    if GetVeinMining() then
-        Moveto(GetVeinInitialPos())
+    if GetVeinMining() then         -- Resume veinmining
+        Moveto(GetVeinInitialPos()) -- Go back to start
+        Rotate(GetVeinInitialDir()) -- Restore orientation
         SetVeinMining(false)
     end
     print("Resuming Operation")
@@ -82,25 +83,23 @@ function GetMoveDir(mx, my)
 end
 
 function Rotate(dir)
-    if dir == UP or dir == DOWN then
+    if dir == UP or dir == DOWN or dir == GetFacing() then
         return
     end
-    while not (dir == GetFacing()) do
-        if dir == 0 and GetFacing() == 3 then
-            turtle.turnLeft()
-            SetFacing(3)
-        elseif dir == 3 and GetFacing() == 0 then
-            turtle.turnRight()
-            SetFacing(0)
-        end
-        if dir < GetFacing() then
-            turtle.turnLeft()
-            SetFacing(GetFacing() - 1)
-        else
-            turtle.turnRight()
-            SetFacing(GetFacing() + 1)
-        end
+
+    local current = GetFacing()
+    local target = dir
+    local diff = (target - current + 4) % 4
+
+    if diff == 1 then
+        turtle.turnRight()
+    elseif diff == 2 then
+        turtle.turnRight()
+        turtle.turnRight()
+    elseif diff == 3 then
+        turtle.turnLeft()
     end
+    SetFacing(target)
 end
 
 function Move(mx, my, mz, destructive)
@@ -218,7 +217,8 @@ end
 function HasEnoughFuel()
     local pos = GetPosition()
     local fuel = GetFuel()
-    local dist = (pos.x + pos.y + pos.z) + 100
+
+    local dist = pos:manhattan() + 100
     if dist > fuel then
         return false
     end
@@ -362,7 +362,7 @@ function Veinmine(dir)
     end
     print("Finished Veinmine")
     Moveto(GetVeinInitialPos())
-    SetFacing(GetVeinInitialDir())
+    Rotate(GetVeinInitialDir())
     SetVeinMining(false)
 end
 
