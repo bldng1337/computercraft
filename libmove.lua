@@ -305,6 +305,9 @@ function CheckForWorth(dir)
         end
         return
     end
+    if GetVeinMining() then
+        return
+    end
     if CheckBlockWorth(block) then
         Veinmine(dir, ToVeinMine)
     end
@@ -320,6 +323,9 @@ local alldirs = {
 }
 
 function Veinmine(dir, tomine)
+    if GetVeinMining() then
+        return
+    end
     print("Starting Veinmine")
     local initpos = GetPosition()
     local initdir = GetFacing()
