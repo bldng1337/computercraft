@@ -309,7 +309,7 @@ function CheckForWorth(dir)
         return
     end
     if CheckBlockWorth(block) then
-        Veinmine(dir, ToVeinMine)
+        Veinmine(dir)
     end
 end
 
@@ -333,7 +333,7 @@ function Veinmine(dir, tomine)
     SetVeinInitialDir(initdir)
     SetVeinMining(true)
     local stack = Stack.new()
-    local checked = Set.new()
+    -- local checked = Set.new()
     stack:push(DirToVec(dir) + initpos)
     while not stack:isEmpty() do
         local vec = stack:pop()
@@ -346,16 +346,17 @@ function Veinmine(dir, tomine)
         for i, v in ipairs(alldirs) do
             local dir = VecToDir(v)
             local pos = GetPosition() + v
-            if checked:contains(pos) then
-                print("Skipping " .. DirToString(dir))
+            print("Checking " .. DirToString(dir) .. " at " .. pos.x .. ", " .. pos.y .. ", " .. pos.z)
+            -- if checked:contains(pos) then
+            --     print("Skipping " .. DirToString(dir))
+            -- end
+            -- if not checked:contains(pos) then
+            --     checked:add(pos)
+            if CheckBlockWorth(Inspect(dir), ToVeinMine) then
+                print("Pushing " .. DirToString(dir))
+                stack:push(pos)
             end
-            if not checked:contains(pos) then
-                checked:add(pos)
-                if CheckBlockWorth(Inspect(dir), tomine) then
-                    print("Pushing " .. DirToString(dir))
-                    stack:push(pos)
-                end
-            end
+            -- end
         end
     end
     print("Finished Veinmine")
