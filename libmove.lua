@@ -1,7 +1,11 @@
+if LibMove then
+    return
+end
+LibMove = true
+
 require("libdata")
 require("libstate")
 require("libinventory")
-
 
 function HandleResume()
     if GetReturning() then

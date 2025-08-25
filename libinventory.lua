@@ -1,4 +1,10 @@
+if LibInventory then
+    return
+end
+LibInventory = true
+
 require("libmove")
+
 ToClear = Set.new()
 Keep = Set.new()
 
