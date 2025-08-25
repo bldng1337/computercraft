@@ -1,9 +1,9 @@
 args = { ... }
 
 -- Configurable room dimensions
-local width = args[1] or 5
-local depth = args[2] or 5
-local height = args[3] or 5
+local width = tonumber(args[1]) or 5
+local depth = tonumber(args[2]) or 5
+local height = tonumber(args[3]) or 5
 
 if width < 3 or depth < 3 or height < 3 then
     error("Room dimensions must be at least 3x3x3")
