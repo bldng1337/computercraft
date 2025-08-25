@@ -1,6 +1,6 @@
 Version = -1
 function GetRepo()
-    local repo = "todo"
+    local repo = "https://raw.githubusercontent.com/bldng1337/computercraft/refs/heads/main"
 
     local indexraw = http.get(repo .. "/index.json")
     local index = textutils.unserialiseJSON(indexraw)
