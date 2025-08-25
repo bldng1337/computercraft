@@ -68,6 +68,12 @@ function VecToDir(vec)
     if vec.x == 0 and vec.y > 0 and vec.z == 0 then
         return RIGHT;
     end
+    if vec.x == 0 and vec.y == 0 and vec.z > 0 then
+        return UP;
+    end
+    if vec.x == 0 and vec.y == 0 and vec.z < 0 then
+        return DOWN;
+    end
     return GetFacing()
 end
 
@@ -322,7 +328,7 @@ local alldirs = {
     DirToVec(LEFT),
 }
 
-function Veinmine(dir, tomine)
+function Veinmine(dir)
     if GetVeinMining() then
         return
     end
@@ -333,31 +339,25 @@ function Veinmine(dir, tomine)
     SetVeinInitialDir(initdir)
     SetVeinMining(true)
     local stack = Stack.new()
-    -- local checked = Set.new()
-    stack:push(DirToVec(dir) + initpos)
+    local checked = Set.new()
+    local first_pos = DirToVec(dir) + initpos
+    stack:push(first_pos)
+    checked:add(first_pos)
     while not stack:isEmpty() do
         local vec = stack:pop()
         if vec == nil then
             break
         end
-        print("Moving to " .. vec.x .. ", " .. vec.y .. ", " .. vec.z)
         Moveto(vec)
-        sleep(1)
-        print("Checking...")
         for i, v in ipairs(alldirs) do
-            local dir = VecToDir(v)
+            local check_dir = VecToDir(v)
             local pos = GetPosition() + v
-            print("Checking " .. DirToString(dir) .. " at " .. pos.x .. ", " .. pos.y .. ", " .. pos.z)
-            -- if checked:contains(pos) then
-            --     print("Skipping " .. DirToString(dir))
-            -- end
-            -- if not checked:contains(pos) then
-            --     checked:add(pos)
-            if CheckBlockWorth(Inspect(dir), ToVeinMine) then
-                print("Pushing " .. DirToString(dir))
-                stack:push(pos)
+            if not checked:contains(pos) then
+                checked:add(pos)
+                if CheckBlockWorth(Inspect(check_dir), ToVeinMine) then
+                    stack:push(pos)
+                end
             end
-            -- end
         end
     end
     print("Finished Veinmine")
