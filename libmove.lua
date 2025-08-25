@@ -346,7 +346,9 @@ function Veinmine(dir, tomine)
         for i, v in ipairs(alldirs) do
             local dir = VecToDir(v)
             local pos = GetPosition() + v
-            print("Considering " .. checked:contains(pos))
+            if checked:contains(pos) then
+                print("Skipping " .. DirToString(dir))
+            end
             if not checked:contains(pos) then
                 checked:add(pos)
                 if CheckBlockWorth(Inspect(dir), tomine) then
