@@ -16,6 +16,7 @@ end
 
 GetPosition, SetPosition = UseState("Position", Vec3.new(0, 0, 0))
 GetFacing, SetFacing = UseState("Facing", 0)
+ShouldCheckForWorth = true
 FORWARD = 0
 RIGHT = 1
 BACK = 2
@@ -134,7 +135,7 @@ function Move(mx, my, mz, destructive)
             sleep(0.1)
         end
         CheckReturn()
-        if not GetReturning() then
+        if not GetReturning() and ShouldCheckForWorth then
             CheckForWorth(GetFacing())
             CheckForWorth(UP)
             CheckForWorth(DOWN)

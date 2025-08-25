@@ -1,6 +1,5 @@
-args = { ... }
+local args = { ... }
 
--- Configurable room dimensions
 local width = tonumber(args[1]) or 5
 local depth = tonumber(args[2]) or 5
 local height = tonumber(args[3]) or 5
@@ -10,111 +9,46 @@ if width < 3 or depth < 3 or height < 3 then
 end
 print("Mining a " .. width .. "x" .. depth .. "x" .. height .. " room")
 
--- Load libraries
 require("libdata")
 require("libstate")
 require("libinventory")
 require("libmove")
+ShouldCheckForWorth = false
 
--- Get the building material from the first slot
-turtle.select(1)
-local buildingMaterial = turtle.getItemDetail()
+local buildingMaterial = GetItem(1)
 if not buildingMaterial then
     error("No building material in the first slot!")
 end
 
--- Function to mine a block and place a new one
-function mineAndReplace(direction)
-    -- Mine the block
-    Dig(direction)
 
-    -- Place the new block
-    SelectItem(buildingMaterial.name)
-    Place(direction)
-end
+local startpoint = Vec3.new(0, -width / 2, 0)
+local endpoint = Vec3.new(depth, width / 2, height)
 
--- Mine out the room
-for z = 1, height do
-    for y = 1, depth do
-        for x = 1, width do
-            -- Mine forward
-            if x < width then
-                Dig(FORWARD)
-            end
-
-            -- Mine up
-            if z < height then
-                Dig(UP)
-            end
-
-            -- Move to the next position
-            if x < width then
-                Move(1, 0, 0)
-            end
-        end
-
-        -- Move to the next row
-        if y < depth then
-            Move(-width + 1, 1, 0)
-        end
-    end
-
-    -- Move to the next level
-    if z < height then
-        Move(0, -depth + 1, 1)
-    end
-end
-
--- Return to the starting position to begin building
-ReturnHome()
-
--- Build the walls and floor
-for z = 1, height do
-    for y = 1, depth do
-        for x = 1, width do
-            -- Build floor
-            if z == 1 then
+for z = startpoint.z, endpoint.z do
+    for y = startpoint.y, endpoint.y do
+        local yedge = y == startpoint.y or y == endpoint.y
+        for x = startpoint.x, endpoint.x do
+            local xedge = x == startpoint.x or x == endpoint.x
+            local pos = Vec3.new(x, y, z)
+            if xedge or yedge or z == startpoint.z then
+                Dig(DOWN)
                 SelectItem(buildingMaterial.name)
                 Place(DOWN)
             end
-
-            -- Build walls
-            if y == 1 then
+            if z == endpoint.z and not (xedge or yedge) then
+                Dig(UP)
                 SelectItem(buildingMaterial.name)
-                Place(LEFT)
+                Place(UP)
             end
-            if y == depth then
+            local prev = GetPosition()
+            Moveto(pos)
+            if xedge or yedge and z == endpoint.z then
+                local delta = pos - prev
+                local dir = VecToDir(delta)
+                Dig(dir)
                 SelectItem(buildingMaterial.name)
-                Place(RIGHT)
-            end
-            if x == 1 then
-                SelectItem(buildingMaterial.name)
-                Place(BACK)
-            end
-            if x == width then
-                SelectItem(buildingMaterial.name)
-                Place(FORWARD)
-            end
-
-            -- Move to the next position
-            if x < width then
-                Move(1, 0, 0)
+                Place(dir)
             end
         end
-
-        -- Move to the next row
-        if y < depth then
-            Move(-width + 1, 1, 0)
-        end
-    end
-
-    -- Move to the next level
-    if z < height then
-        Move(0, -depth + 1, 1)
     end
 end
-
--- Return to the starting position
-ReturnHome()
-
-print("Room mining complete!")
