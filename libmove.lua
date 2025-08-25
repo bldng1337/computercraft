@@ -340,14 +340,18 @@ function Veinmine(dir, tomine)
         if vec == nil then
             break
         end
+        print("Moving to " .. vec.x .. ", " .. vec.y .. ", " .. vec.z)
         Moveto(vec)
+        print("Checking...")
         for i, v in ipairs(alldirs) do
             local dir = VecToDir(v)
             local pos = GetPosition() + v
+            print("Considering " .. checked:contains(pos))
             if not checked:contains(pos) then
                 checked:add(pos)
                 if CheckBlockWorth(Inspect(dir), tomine) then
-                    stack:push(vec + v)
+                    print("Pushing " .. DirToString(dir))
+                    stack:push(pos)
                 end
             end
         end
