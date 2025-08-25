@@ -1,7 +1,7 @@
 {
   "version": 1,
   "files": [
-    "autostart.lua",
+    "startup",
     "libdata.lua",
     "libinventory.lua",
     "libmove.lua",
