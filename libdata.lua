@@ -1,4 +1,3 @@
-
 Vec3 = {}
 Vec3.__index = Vec3
 
@@ -36,8 +35,8 @@ function Vec3.__tostring(v)
     return string.format("Vec3(x:%.2f, y:%.2f, z:%.2f)", v.x, v.y, v.z)
 end
 
-function Vec3:serialize(v)
-    return { typeid = "vec3", x = v.x, y = v.y, z = v.z }
+function Vec3:serialize()
+    return { typeid = "vec3", x = self.x, y = self.y, z = self.z }
 end
 
 function Vec3:manhattan(other)
@@ -126,13 +125,15 @@ function Stack:size()
 end
 
 function Stack:serialize()
-    local data = self.data.map(function(v)
-        if v.serialize then
-            return v.serialize()
+    local serialized_data = {}
+    for i, v in ipairs(self.data) do
+        if type(v) == "table" and type(v.serialize) == "function" then
+            serialized_data[i] = v:serialize()
+        else
+            serialized_data[i] = v
         end
-        return v
-    end)
-    return { typeid = "stack", data = table.concat(data, ",") }
+    end
+    return { typeid = "stack", data = serialized_data }
 end
 
 --- Set.lua
@@ -259,13 +260,15 @@ function Set:is_subset(otherSet)
 end
 
 function Set:serialize()
-    local data = self.map(function(v)
-        if v.serialize then
-            return v.serialize()
+    local serialized_data = {}
+    for element in self:elements() do
+        if type(element) == "table" and type(element.serialize) == "function" then
+            table.insert(serialized_data, element:serialize())
+        else
+            table.insert(serialized_data, element)
         end
-        return v
-    end)
-    return { typeid = "set", data = table.concat(data, ",") }
+    end
+    return { typeid = "set", data = serialized_data }
 end
 
 function sign(x)
@@ -287,9 +290,13 @@ function table.map(f, t)
 end
 
 function Deserialize(data)
+    if type(data) ~= "table" or data.typeid == nil then
+        return data
+    end
+
     if (data.typeid == "stack") then
         local stack = Stack.new()
-        for i, v in ipairs(data.data:split(",")) do
+        for _, v in ipairs(data.data) do
             stack:push(Deserialize(v))
         end
         return stack
@@ -297,7 +304,7 @@ function Deserialize(data)
         return Vec3.new(data.x, data.y, data.z)
     elseif (data.typeid == "set") then
         local set = Set.new()
-        for i, v in ipairs(data.data:split(",")) do
+        for _, v in ipairs(data.data) do
             set:add(Deserialize(v))
         end
         return set
