@@ -33,7 +33,7 @@ function mineAndReplace(direction)
     Place(direction)
 end
 
--- Mine out the room and build the walls and floor
+-- Mine out the room
 for z = 1, height do
     for y = 1, depth do
         for x = 1, width do
@@ -47,6 +47,31 @@ for z = 1, height do
                 Dig(UP)
             end
 
+            -- Move to the next position
+            if x < width then
+                Move(1, 0, 0)
+            end
+        end
+
+        -- Move to the next row
+        if y < depth then
+            Move(-width + 1, 1, 0)
+        end
+    end
+
+    -- Move to the next level
+    if z < height then
+        Move(0, -depth + 1, 1)
+    end
+end
+
+-- Return to the starting position to begin building
+ReturnHome()
+
+-- Build the walls and floor
+for z = 1, height do
+    for y = 1, depth do
+        for x = 1, width do
             -- Build floor
             if z == 1 then
                 SelectItem(buildingMaterial.name)
