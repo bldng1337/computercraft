@@ -342,6 +342,7 @@ function Veinmine(dir, tomine)
         end
         print("Moving to " .. vec.x .. ", " .. vec.y .. ", " .. vec.z)
         Moveto(vec)
+        sleep(1)
         print("Checking...")
         for i, v in ipairs(alldirs) do
             local dir = VecToDir(v)
