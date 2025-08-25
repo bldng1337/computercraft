@@ -1,8 +1,16 @@
 Version = -1
+
+function GetRemote(url)
+    local file = http.get(url)
+    local content = file.readAll()
+    file.close()
+    return content
+end
+
 function GetRepo()
     local repo = "https://raw.githubusercontent.com/bldng1337/computercraft/refs/heads/main"
 
-    local indexraw = http.get(repo .. "/index.json")
+    local indexraw = GetRemote(repo .. "/index.json")
     local index = textutils.unserialiseJSON(indexraw)
 
     local versionfile = fs.open("version", "r")
@@ -19,7 +27,7 @@ function GetRepo()
     print("Version is out of date updating")
     for _, v in pairs(index.files) do
         print("Downloading " .. v)
-        local file = http.get(repo .. "/" .. v)
+        local file = GetRemote(repo .. "/" .. v)
         local f = fs.open(v, "w")
         f.write(file)
         f.close()
