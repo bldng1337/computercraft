@@ -1,10 +1,3 @@
-if LibInventory then
-    return
-end
-LibInventory = true
-
-require("libmove")
-
 ToClear = Set.new()
 Keep = Set.new()
 
@@ -87,16 +80,6 @@ function ClearInv()
             if ShouldClear(item) then
                 turtle.select(i)
                 turtle.drop()
-            end
-        end
-    end
-    if IsInvFull() then
-        print("Going back to clear inventory")
-        ReturnHome()
-        for _, dir in pairs({ UP, DOWN, FORWARD, BACK, LEFT, RIGHT }) do
-            local block = Inspect(dir)
-            if IsChest(block) then
-                Deposit(dir)
             end
         end
     end

@@ -1,7 +1,3 @@
-if LibData then
-    return
-end
-LibData = true
 
 Vec3 = {}
 Vec3.__index = Vec3

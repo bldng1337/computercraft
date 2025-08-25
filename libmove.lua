@@ -1,8 +1,3 @@
-if LibMove then
-    return
-end
-LibMove = true
-
 require("libdata")
 require("libstate")
 require("libinventory")
@@ -85,6 +80,13 @@ function Rotate(dir)
         return
     end
     while not (dir == GetFacing()) do
+        if dir == 0 and GetFacing() == 3 then
+            turtle.turnLeft()
+            SetFacing(3)
+        elseif dir == 3 and GetFacing() == 0 then
+            turtle.turnRight()
+            SetFacing(0)
+        end
         if dir < GetFacing() then
             turtle.turnLeft()
             SetFacing(GetFacing() - 1)
@@ -127,7 +129,6 @@ function Move(mx, my, mz, destructive)
             sleep(0.1)
         end
         CheckReturn()
-        CheckInv()
         if not GetReturning() then
             CheckForWorth(GetFacing())
             CheckForWorth(UP)
@@ -233,6 +234,7 @@ end
 
 GetVeinMining, SetVeinMining = UseState("VeinMining", false)
 GetVeinInitialPos, SetVeinInitialPos = UseState("VeinInitialPos", Vec3.new(0, 0, 0))
+GetVeinInitialDir, SetVeinInitialDir = UseState("VeinInitialDir", 0)
 ToVeinMine = Set.new()
 
 function Inspect(dir)
@@ -309,17 +311,20 @@ function CheckForWorth(dir)
 end
 
 local alldirs = {
-    Vec3.new(0, 0, -1),
-    Vec3.new(0, 0, 1),
-    Vec3.new(0, -1, 0),
-    Vec3.new(0, 1, 0),
-    Vec3.new(-1, 0, 0),
-    Vec3.new(1, 0, 0)
+    DirToVec(DOWN),
+    DirToVec(UP),
+    DirToVec(FORWARD),
+    DirToVec(RIGHT),
+    DirToVec(BACK),
+    DirToVec(LEFT),
 }
 
 function Veinmine(dir, tomine)
+    print("Starting Veinmine")
     local initpos = GetPosition()
+    local initdir = GetFacing()
     SetVeinInitialPos(initpos)
+    SetVeinInitialDir(initdir)
     SetVeinMining(true)
     local stack = Stack.new()
     local checked = Set.new()
@@ -341,7 +346,9 @@ function Veinmine(dir, tomine)
             end
         end
     end
+    print("Finished Veinmine")
     Moveto(GetVeinInitialPos())
+    SetFacing(GetVeinInitialDir())
     SetVeinMining(false)
 end
 

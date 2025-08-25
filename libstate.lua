@@ -1,7 +1,3 @@
-if LibState then
-    return
-end
-LibState = true
 
 function SaveState()
     local r = fs.open("resume", "w")
