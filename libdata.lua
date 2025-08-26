@@ -27,6 +27,10 @@ function Vec3.__add(a, b)
     return Vec3.new(a.x + b.x, a.y + b.y, a.z + b.z)
 end
 
+function Vec3.__sub(a, b)
+    return Vec3.new(a.x - b.x, a.y - b.y, a.z - b.z)
+end
+
 -- Metamethod for converting the vector to a string.
 -- This is useful for printing the vector's values.
 -- @param v The vector to be converted.
