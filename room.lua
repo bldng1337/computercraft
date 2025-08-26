@@ -32,6 +32,8 @@ for z = startpoint.z, endpoint.z do
             local xedge = (x == startpoint.x) or (x == endpoint.x)
             local pos = Vec3.new(x, y, z)
             print("Mining " .. pos.x .. ", " .. pos.y .. ", " .. pos.z)
+            local prev = GetPosition()
+            Moveto(pos)
             if (xedge or yedge) or z == startpoint.z then
                 Dig(DOWN)
                 SelectItem(buildingMaterial.name)
@@ -42,8 +44,6 @@ for z = startpoint.z, endpoint.z do
                 SelectItem(buildingMaterial.name)
                 Place(UP)
             end
-            local prev = GetPosition()
-            Moveto(pos)
             if z == endpoint.z and (xedge or yedge) then
                 local delta = prev - pos
                 local dir = VecToDir(delta)
