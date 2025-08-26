@@ -27,9 +27,9 @@ print("Starting at " .. startpoint.x .. ", " .. startpoint.y .. ", " .. startpoi
 print("Ending at " .. endpoint.x .. ", " .. endpoint.y .. ", " .. endpoint.z)
 for z = startpoint.z, endpoint.z do
     for y = startpoint.y, endpoint.y do
-        local yedge = y == startpoint.y or y == endpoint.y
+        local yedge = (y == startpoint.y) or (y == endpoint.y)
         for x = startpoint.x, endpoint.x do
-            local xedge = x == startpoint.x or x == endpoint.x
+            local xedge = (x == startpoint.x) or (x == endpoint.x)
             local pos = Vec3.new(x, y, z)
             print("Mining " .. pos.x .. ", " .. pos.y .. ", " .. pos.z)
             if (xedge or yedge) or z == startpoint.z then
