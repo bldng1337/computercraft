@@ -21,8 +21,8 @@ if not buildingMaterial then
 end
 
 
-local startpoint = Vec3.new(0, -(width / 2), 0)
-local endpoint = Vec3.new(depth, width / 2, height)
+local startpoint = Vec3.new(0, -(width / 2), 0):floor()
+local endpoint = Vec3.new(depth, width / 2, height):ceil()
 print("Starting at " .. startpoint.x .. ", " .. startpoint.y .. ", " .. startpoint.z)
 print("Ending at " .. endpoint.x .. ", " .. endpoint.y .. ", " .. endpoint.z)
 for z = startpoint.z, endpoint.z do

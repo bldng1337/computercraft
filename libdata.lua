@@ -46,6 +46,14 @@ function Vec3:manhattan(other)
     return math.abs(other.x - self.x) + math.abs(other.y - self.y) + math.abs(other.z - self.z)
 end
 
+function Vec3:floor()
+    return Vec3.new(math.floor(self.x), math.floor(self.y), math.floor(self.z))
+end
+
+function Vec3:ceil()
+    return Vec3.new(math.ceil(self.x), math.ceil(self.y), math.ceil(self.z))
+end
+
 Stack = {}
 Stack.__index = Stack
 
