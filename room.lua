@@ -21,15 +21,17 @@ if not buildingMaterial then
 end
 
 
-local startpoint = Vec3.new(0, -width / 2, 0)
+local startpoint = Vec3.new(0, -(width / 2), 0)
 local endpoint = Vec3.new(depth, width / 2, height)
-
+print("Starting at " .. startpoint.x .. ", " .. startpoint.y .. ", " .. startpoint.z)
+print("Ending at " .. endpoint.x .. ", " .. endpoint.y .. ", " .. endpoint.z)
 for z = startpoint.z, endpoint.z do
     for y = startpoint.y, endpoint.y do
         local yedge = y == startpoint.y or y == endpoint.y
         for x = startpoint.x, endpoint.x do
             local xedge = x == startpoint.x or x == endpoint.x
             local pos = Vec3.new(x, y, z)
+            print("Mining " .. pos.x .. ", " .. pos.y .. ", " .. pos.z)
             if xedge or yedge or z == startpoint.z then
                 Dig(DOWN)
                 SelectItem(buildingMaterial.name)
